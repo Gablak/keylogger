@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MR hackers keylog basement</title>
+  <style>
+    /* Add basic styling for a clear and readable interface (optional) */
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .hotbar {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 10px;
+    }
+    .hotbar-button {
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .hotbar-button.active {
+      background-color: #eee;
+    }
+    .content-area {
+      border: 1px solid #ddd;
+      padding: 10px;
+      min-height: 200px; /* Adjust as needed */
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+  <h1>Text File Viewer</h1>
+  <div class="hotbar">
+    <select id="display-mode">
+      <option value="default">Default</option>
+      <option value="edited">Rewritten</option>
+    </select>
+    {% for filename in text_files %}
+      <a href="#" class="hotbar-button" data-filename="{{ filename }}">{{ filename }}</a>
+    {% endfor %}
+  </div>
+  <div class="content-area" id="content-area">
+    <p>Please select a text file from the hotbar.</p>
+  </div>
+  <button id="delete-button" disabled>Replace Content</button>
+
+  <script>
+    const contentArea = document.getElementById('content-area');
+    const hotbarButtons = document.querySelectorAll('.hotbar-button');
+    const displayModeSelect = document.getElementById('display-mode');
+    const deleteButton = document.getElementById('delete-button');
+
+    let selectedFilename = null; // Initialize selectedFilename outside the click event
+
+    function reloadContent() {
+      if (selectedFilename) {
+        fetch(`/show_file/${selectedFilename}`)
+          .then(response => response.text())
+          .then(content => {
+            const processedContent = processText(content, displayModeSelect.value);
+            contentArea.innerHTML = processedContent;
+          })
+          .catch(error => {
+            console.error("Error reloading content:", error);
+          });
+      }
+    }
+
+    $(document).ready(function() {
+
+      $('.hotbar-button').click(function(event) {
+        event.preventDefault();
+        $('.hotbar-button').removeClass('active'); // Remove active class from all buttons
+        $(this).addClass('active'); // Add active class to the clicked button
+        selectedFilename = $(this).data('filename');
+
+        fetch(`/show_file/${selectedFilename}`)
+          .then(response => response.text())
+          .then(content => {
+            const processedContent = processText(content, displayModeSelect.value);
+            contentArea.innerHTML = processedContent;
+            deleteButton.disabled = false; // Enable delete button only after successful fetch
+          })
+          .catch(error => {
+            console.error("Error fetching file content:", error);
+            contentArea.innerHTML = `Error: Could not fetch file content.`;
+            deleteButton.disabled = true; // Disable delete button on error
+          });
+      });
+
+      displayModeSelect.addEventListener('change', () => {
+        if (selectedFilename) {
+          fetch(`/show_file/${selectedFilename}`)
+            .then(response => response.text())
+            .then(content => {
+              const processedContent = processText(content, displayModeSelect.value);
+              contentArea.innerHTML = processedContent;
+            })
+            .catch(error => {
+              console.error("Error re-fetching content:", error);
+            });
+        }
+      });
+
+      deleteButton.addEventListener('click', () => {
+        if (selectedFilename) {
+          fetch(`/clear_content/${selectedFilename}`, { method: 'POST' }) // Update route
+            .then(response => {
+              if (response.ok) {
+                contentArea.innerHTML = ""; // Clear content area
+                deleteButton.disabled = true; // Disable delete button after successful clear
+              } else {
+                console.error("Error clearing content:", response.statusText);
+                // Handle potential clearing errors (display error message)
+              }
+            })
+            .catch(error => {
+              console.error("Error during clearing:", error);
+              // Handle potential network errors (display error message)
+            });
+        }
+      });      
+      
+
+      function reloadContent() {
+        if (selectedFilename) {
+          fetch(`/show_file/${selectedFilename}`)
+            .then(response => response.text())
+            .then(content => {
+              const processedContent = processText(content, displayModeSelect.value);
+              contentArea.innerHTML = processedContent;
+            })
+            .catch(error => {
+              console.error("Error reloading content:", error);
+            });
+        }
+      }
+      
+
+      // Start reloading immediately (optional, not used here)
+       reloadContent();
+       setInterval(reloadContent, 4000); // Reload every 2 seconds
+    });
+
+    function processText(text, mode) {
+      let processedText = "";
+      if (mode === "default") {
+        return text;
+      } else if (mode === "edited") {
+        for (let char of text) {
+          if (char === "\n") {
+            processedText += " "; // Add a space after line breaks (optional)
+          } else {
+            switch (char) {
+              case " ":
+                processedText += " ";
+                break;
+              case "backspace":
+                processedText += "←";
+                break;
+              default:
+                processedText += char;
+            }
+          }
+        console.log(char)
+        }
+        processedText = processedText.replace(/\n/g, "");
+        return processedText;
+      }
+    }
+  </script>
+</body>
+</html>
