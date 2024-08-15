@@ -16,14 +16,25 @@ I will be updating this project and here are things you should be stayed tuned f
 
 # How to set up:
 
-You will need:
-    Linux server (RPI2 works well enough)
-    Central computer (Your personal just for setting up)
-    Internet connection (Preferably wired)
-    Ability to port forward (Ik but there isnt a better way I could think of)
+There will be a tutorial
+
+# You will need:
+
+Linux server (RPI2 works well enough)
+
+Central computer (Your personal just for setting up)
+
+Internet connection (Preferably wired)
+
+Ability to port forward (Ik but there isnt a better way I could think of)
+
+     
 
 Optional:
-    USB flash drive (To load your keylogger onto a target machine physicaly)
-    USB RubberDucky (Also an option instead of a flash drive)
-    Third PC (If you can it is recomended to test everything out)   
+
+USB flash drive (To load your keylogger onto a target machine physicaly)
+
+USB RubberDucky (Also an option instead of a flash drive)
+
+Third PC (If you can it is recomended to test everything out)   
     
