@@ -127,3 +127,5 @@ if __name__ == '__main__':
         sender_thread.join()
     except KeyboardInterrupt:
         pass
+
+# pyinstaller --onefile --windowed target.py
