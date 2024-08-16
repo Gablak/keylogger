@@ -1,6 +1,6 @@
 # Keylogger
 
-A keylogger made to send keystrokes to a remote server for it to than be accessed from a web interface.
+A keylogger made to send keystrokes to a remote server for it to then be accessed from a web interface.
 
 There are many things to work on including mainly reliability but I am overall pretty happy with it. Dont expect some kind of crazy UI or functions, this is really bare bones and I made it for the sole purpose of leveling up my python skills. I also found the idea really neat and coudlnt find a good alternative ... so I made my own one.
 
@@ -8,7 +8,7 @@ It all started when I was looking into botnets and how to make my own one, but I
 
 # Future updates
 
-More reliable and secure connection and transfer
+More reliable and secure connection
 
 Two way interactions (so you can write, modify, send commands to the targets for them to then behave like that (Ex. Stop for 15 min))
 
@@ -21,7 +21,43 @@ Improved its under-the-radar ability (windows updated in the future may brick it
 
 # How to set up:
 
-There will be a tutorial
+SSH into your remote server and cd into the home directory
+
+Then clone the project with
+
+    git clone https://github.com/Gablak/keylogger
+    
+Cd into keylogger dir
+
+    cd keylogger
+
+Cd into client dir
+
+    cd Client
+
+Edit target.py with nano
+
+    sudo nano target.py
+
+When in nano scroll down until you see "YOUR IP HERE" and replace it with your public IP address
+
+Then exit nano with
+Ctrl + S,
+Ctrl + X,
+Y,
+ENTER
+
+    cd ..
+    
+    python3.12 installme.py
+
+Wait until all dependencies are finished installing. If it propmts you to update pip or you see some errors just update pip as it tells you and run the script again. If it still gives errors ignore it for now.
+
+    cd Client
+
+Now rename the target.py script so that the target doesnt get suspicious about anything.
+
+    mv target.py ANY_NAME_HERE.py
 
 # You will need:
 
