@@ -4,7 +4,7 @@ A keylogger made to send keystrokes to a remote server for it to then be accesse
 
 There are many things to work on including mainly reliability but I am overall pretty happy with it. Dont expect some kind of crazy UI or functions, this is really bare bones and I made it for the sole purpose of leveling up my python skills. I also found the idea really neat and coudlnt find a good alternative ... so I made my own one.
 
-It all started when I was looking into botnets and how to make my own one, but I quickly found out that the only ones that I had access to (at the time) was BYOB and Covenant. BYOB was outdated, was a pain to set up, didnt work and the comunity also gave up after trying to consult my problem in the discord. Covenant did work really nicely (when setting up) tho it was lacking features BYOB had and didnt work for me. So I decided to start with a keylogger. I (probbably) will make more of these tools like this keylogger and eventually will put it into a one big interface. But that has years to come sinc i still need to start and finish high school. :/
+It all started when I was looking into botnets and how to make my own one, but I quickly found out that the only ones that I had access to (at the time) was BYOB and Covenant. BYOB was outdated, was a pain to set up, didnt work and the comunity also gave up after trying to consult my problem in the discord. Covenant did work really nicely (when setting up) tho it was lacking features BYOB had and didnt work for me. So I decided to start with a keylogger. I (probbably) will make more of these tools like this keylogger and eventually will put it into a one big interface. But that has years to come since i still need to start and finish high school. :/
 
 # Future updates
 
