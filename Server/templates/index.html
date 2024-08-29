@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MR hackers keylog basement</title>
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <title>Keylogger</title>
   <style>
     /* Add basic styling for a clear and readable interface (optional) */
     body {
@@ -30,7 +31,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-  <h1>Text File Viewer</h1>
+  <h1>Select keylogs</h1>
   <div class="hotbar">
     <select id="display-mode">
       <option value="default">Default</option>
@@ -41,9 +42,9 @@
     {% endfor %}
   </div>
   <div class="content-area" id="content-area">
-    <p>Please select a text file from the hotbar.</p>
+    <p>Please select keylogs from the hotbar.</p>
   </div>
-  <button id="delete-button" disabled>Replace Content</button>
+  <button id="delete-button" disabled>Clear Logs</button>
 
   <script>
     const contentArea = document.getElementById('content-area');
