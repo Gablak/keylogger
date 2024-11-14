@@ -35,7 +35,7 @@ git clone https://github.com/Gablak/keylogger
 ```
 * After that cd into:
 ```
-cd keylogger/Server
+cd keylogger
 ```
 * Here you have an installme script. Everything has been tested only with python 3.12 but it might work on newer versions. Run the installme by doing:
 ```
