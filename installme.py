@@ -20,6 +20,7 @@ packages = [
 client_folder = os.path.join(os.path.dirname(__file__), "Client", "target.py")
 server_folder = os.path.join(os.path.dirname(__file__), "Server")
 scripts = ["start.sh", "check.sh", "stop.sh"]
+command = ["pyinstaller", "--onefile", "--windowed", client_folder]
 
 
 def make_executables():
@@ -75,10 +76,21 @@ def update_ip_address():
                 print(f"Updated IP address to: {ip_address}")
             else:
                 file.write(line)
+                          
+def make_exe():
+    
+    result = subprocess.run(command, capture_output=True, text=True)
+    
+    if result.returncode != 0:
+        print(f"Error: {result.stderr}")
+    else:
+        print(f"PyInstaller Output: {result.stdout}")
+    
 if __name__ == "__main__":
     update_ip_address()
     install_pacages()
     make_executables()
+    make_exe()
 
 
 print("Everything set up!")

